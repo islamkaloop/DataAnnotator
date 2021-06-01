@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <title>QR-id & Firebase</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-database.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</header>
+
+<body>
+    <div class="box">
+        <div class="content" id="content">
+            <span class="text-center" id="sent-No">Sentence # : </span>
+            <span class="text-center" id="sentance">here I am</span>
+            <span class="text-center" id="token-No">Token # : </span>
+            <span class="text-center" id="token">here</span>
+            <span class="text-center" id="segment">Not Yet!</span>
+            <span class="text-center" id="tag">Not Yet!</span>
+            <div class="btn-group">
+                <button onclick="showSegment()">MIXED</button>
+            </div>
+            <div id="segmentinput" style="display: none;">
+                <span class="text-center" id="segment-id">Not Yet!</span>
+                <div class="btn-group">
+                    <button id="prev" onclick="prevVar()"></button>
+                    <button onclick="segment()">SEGMENT</button>
+                    <button onclick="nextVar()">>></button>
+                </div>
+                <div class="btn-group">
+                    <button onclick="refresh()">REFRESH</button>
+                    <button onclick="doneWithSegmentation()">Done</button>
+                </div>
+
+            </div>
+            <div id="segmentTag" style="display: none;">
+                <span class="text-center" id="rem-tag">5</span>
+                <div class="btn-group">
+                    <button onclick="addTag('AR')">AR</button>
+                    <button onclick="addTag('EN')">EN</button>
+                    <button onclick="addTag('OTHER')">OTHER</button>
+                    <button onclick="addTag('LANG3')">LANG3</button>
+                </div>
+                <div class="btn-group">
+                    <button onclick="addTag('NE.AR')">NE.AR</button>
+                    <button onclick="addTag('NE.EN')">NE.EN</button>
+                    <button onclick="addTag('AMBIG')">AMBIG</button>
+                </div>
+            </div>
+            <div id="tag-mixed" style="display: none;">
+                <div class="btn-group">
+                    <button onclick="refreshTag()">REFRESH TAG</button>
+                </div>
+            </div>
+            <div id="not-mixed">
+                <div class="btn-group">
+                    <button onclick="tagNonMixed('AR')">AR</button>
+                    <button onclick="tagNonMixed('EN')">EN</button>
+                    <button onclick="tagNonMixed('OTHER')">OTHER</button>
+                    <button onclick="tagNonMixed('LANG3')">LANG3</button>
+                </div>
+                <div class="btn-group">
+                    <button onclick="tagNonMixed('NE.AR')">NE.AR</button>
+                    <button onclick="tagNonMixed('NE.EN')">NE.EN</button>
+                    <button onclick="tagNonMixed('AMBIG')">AMBIG</button>
+                </div>
+            </div>
+            <div id="submit" style="display: none;">
+                <div class="btn-group">
+                    <button onclick="submit()">submit</button>
+                </div>
+            </div>
+        </div>
+        <p class="linkerror-msg" id="linkerror-msg">Please wait....</p>
+    </div>
+
+    <script src="scripts.js"></script>
+
+</body>
+
+</html>
