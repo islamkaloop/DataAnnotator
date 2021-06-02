@@ -87,7 +87,6 @@ function nextVar() {
         var first = Token.substr(0, tokensegi);
         var second = Token.substr(tokensegi + 1);
         Token = first + second.substr(0, 1) + "#" + second.substr(1);
-        console.log(Token);
         tokensegi += 1;
         document.getElementById("segment-id").innerHTML = Token;
     }
@@ -99,7 +98,6 @@ function prevVar() {
         var second = Token.substr(tokensegi + 1);
         Token = first.substr(0, tokensegi - 1) + "#" + first.substr(tokensegi - 1, tokensegi) + second;
         tokensegi -= 1;
-        console.log(Token);
         document.getElementById("segment-id").innerHTML = Token;
     }
 }
@@ -126,10 +124,7 @@ function doneWithSegmentation() {
     document.getElementById("segmentinput").style.display = "none";
     document.getElementById("segmentTag").style.display = "block";
     remTag = Token.split(",").length
-    console.log(remTag);
     document.getElementById("rem-tag").innerHTML = remTag;
-
-    console.log(Token);
 }
 
 function addTag(tagValue) {
@@ -161,26 +156,22 @@ function tagNonMixed(tagVal) {
     document.getElementById("tag").innerHTML = tagVal;
     document.getElementById("segment").innerHTML = refreshToken;
     document.getElementById("submit").style.display = "block";
-
-    // firebase.database().ref().remove()
-    // firebase.database().ref().get().then((snapshot) => {
-    //     console.log(snapshot.val());
-    // })
 }
 
 mixed = false;
 function showSegment() {
-    console.log(data);
     if (!mixed) {
         document.getElementById("segmentinput").style.display = "block";
         document.getElementById("not-mixed").style.display = "none";
-        refreshToken = Token;
-        Token = Token.substr(0, 1) + "#" + Token.substr(1, Token.length);
+        Token = refreshToken.substr(0, 1) + "#" + refreshToken.substr(1, refreshToken.length);
         document.getElementById("segment-id").innerHTML = Token;
         mixed = true;
     }
     else {
+        refresh();
         document.getElementById("segmentinput").style.display = "none";
+        document.getElementById("tag-mixed").style.display = "none";
+        document.getElementById("segmentTag").style.display = "none";
         document.getElementById("not-mixed").style.display = "block";
         mixed = false;
     }
@@ -201,12 +192,9 @@ function submit() {
     segLen = ""
     segArray = segm.split(",");
     for (let se in segArray) {
-        console.log(segArray[se]);
-        console.log(segArray[se].length);
         if (segLen === "") segLen += segArray[se].length
         else segLen += "," + segArray[se].length
     }
-    console.log(tag, mixedTag, segm, segLen);
 
     data["data"][tokenNo]["Tag"] = tag
     data["data"][tokenNo]["MixedTag"] = mixedTag
