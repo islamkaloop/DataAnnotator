@@ -16,9 +16,9 @@ var database = firebase.database();
 
 const dbRef = firebase.database().ref();
 
-async function getConfig() {
+async function getConfig(ID) {
     return new Promise((resolve, reject) => {
-        dbRef.child("Config").get()
+        dbRef.child("Config").child(ID).get()
             .then((snapshot) => {
                 return snapshot.val();
             })
@@ -26,6 +26,15 @@ async function getConfig() {
                 resolve(data);
             });
     })
+}
+
+async function postConfig(ID) {
+    var updates = {};
+    updates['/Config/' + ID] = {
+        "CurSentance":1,
+        "CurToken":1,
+    };
+  return firebase.database().ref().update(updates)
 }
 
 async function getSentance(sentNo) {
@@ -46,32 +55,47 @@ tokensegi = 1
 sentNo = 0
 tokenNo = 0
 var data = {}
+annotator = ""
+
 async function loadData() {
+    document.getElementById("annotatorSpan").innerHTML = "Annotator ID: " + annotator;
+    
     var allData = {};
-    await getConfig().then(data => {
+    await getConfig(annotator).then(data => {
         allData["config"] = data;
     })
+    if(allData["config"] === null){
+        console.log("Dddd");
+        postConfig(annotator)
+        await getConfig(annotator).then(data => {
+            allData["config"] = data;
+        })
+    }
     await getSentance(allData["config"]["CurSentance"]).then(data => {
         allData["data"] = data;
     })
+    console.log(allData);
     sentNo = allData["config"]["CurSentance"]
     tokenNo = allData["config"]["CurToken"]
 
     document.getElementById("sent-No").innerHTML = "Sentence #: " + sentNo;
     document.getElementById("token-No").innerHTML = "Token #: " + tokenNo;
+
+    document.getElementById("tag").innerHTML = "Tag: Not Yet!";
+    document.getElementById("segment").innerHTML = "Segment: Not Yet!";
     var Sentance = "";
     for (let token in allData["data"]) {
         if (allData["data"][token]["ID"] == tokenNo) {
             var tokensent = allData["data"][token]["Token"];
             Sentance += "<em style='color: red;'> <[ " + tokensent + " ]> </em>";
-            document.getElementById("token").innerHTML = tokensent;
+            document.getElementById("token").innerHTML = "Token: " +tokensent;
             Token = tokensent;
             refreshToken = tokensent;
         } else {
             Sentance += allData["data"][token]["Token"] + " ";
         }
     }
-    document.getElementById("sentance").innerHTML = Sentance;
+    document.getElementById("sentance").innerHTML = "Sentance: " +Sentance;
 
 
     content = document.getElementById("content");
@@ -80,7 +104,19 @@ async function loadData() {
     content.style.display = "block";
     data = allData;
 };
-loadData();
+
+
+function startAnnotation(){
+    annotator = document.getElementById("annotatorID").value
+    if(annotator === "")
+        alert("The ID should not be Empty!");
+    else{
+        annotator = annotator.toString().toUpperCase();
+        document.getElementById("startpoint").style.display = "none";
+        document.getElementById("linkerror-msg").style.display = "block";
+        loadData();
+    }
+}
 
 function nextVar() {
     if (tokensegi < Token.length - 2) {
@@ -120,7 +156,7 @@ tag = ""
 
 function doneWithSegmentation() {
     Token = Token.substr(0, tokensegi) + Token.substr(tokensegi + 1, Token.length);
-    document.getElementById("segment").innerHTML = Token;
+    document.getElementById("segment").innerHTML = "Segment: "+Token;
     document.getElementById("segmentinput").style.display = "none";
     document.getElementById("segmentTag").style.display = "block";
     remTag = Token.split(",").length
@@ -135,7 +171,7 @@ function addTag(tagValue) {
     }
     remTag -= 1;
     document.getElementById("rem-tag").innerHTML = remTag;
-    document.getElementById("tag").innerHTML = tag;
+    document.getElementById("tag").innerHTML ="Tag: "+ tag;
     if (remTag == 0) {
         document.getElementById("segmentTag").style.display = "none";
         document.getElementById("tag-mixed").style.display = "block";
@@ -147,14 +183,14 @@ function refreshTag() {
     remTag = Token.split(",").length
     tag = ""
     document.getElementById("rem-tag").innerHTML = remTag;
-    document.getElementById("tag").innerHTML = tag;
+    document.getElementById("tag").innerHTML ="Tag: "+ tag;
     document.getElementById("segmentTag").style.display = "block";
     document.getElementById("tag-mixed").style.display = "none";
 }
 
 function tagNonMixed(tagVal) {
-    document.getElementById("tag").innerHTML = tagVal;
-    document.getElementById("segment").innerHTML = refreshToken;
+    document.getElementById("tag").innerHTML = "Tag: "+tagVal;
+    document.getElementById("segment").innerHTML = "Segment: "+refreshToken;
     document.getElementById("submit").style.display = "block";
 }
 
@@ -178,36 +214,24 @@ function showSegment() {
 
 }
 function submit() {
-    tag = ""
-    mixedTag = ""
-    if (mixed) {
-        tag = "MIXED"
-        mixedTag = document.getElementById("tag").innerHTML
-    }
-    else {
-        tag = document.getElementById("tag").innerHTML
-        mixedTag = tag
-    }
+  
+    mixedTag = document.getElementById("tag").innerHTML
     segm = document.getElementById("segment").innerHTML
-    segLen = ""
-    segArray = segm.split(",");
-    for (let se in segArray) {
-        if (segLen === "") segLen += segArray[se].length
-        else segLen += "," + segArray[se].length
+    
+    Annotation = {}
+    Annotation[annotator] = {
+        "Tag" : mixedTag,
+        "Segment" : segm
     }
 
-    data["data"][tokenNo]["Tag"] = tag
-    data["data"][tokenNo]["MixedTag"] = mixedTag
-    data["data"][tokenNo]["Segem"] = segm
-    data["data"][tokenNo]["SegemN"] = segLen
-
-    firebase.database().ref().child("Tokens").child(sentNo).child(tokenNo).update(data["data"][tokenNo]);
+    firebase.database().ref().child("Tokens").child(sentNo).child(tokenNo).child("Annotation").update(Annotation);
 
     tokenNo += 1
     if (typeof data["data"][tokenNo] === 'undefined') sentNo += 1
     data["config"]["CurSentance"] = sentNo
     data["config"]["CurToken"] = tokenNo
-    firebase.database().ref().child("Config").update(data["config"])
+    firebase.database().ref().child("Config").child(annotator).update(data["config"])
+    loadData();
 
-    location.reload();
+    // location.reload();
 }

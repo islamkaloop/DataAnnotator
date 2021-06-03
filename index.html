@@ -13,6 +13,7 @@
 <body>
     <div class="box">
         <div class="content" id="content">
+            <span class="text-center" id="annotatorSpan">Sentence # : </span>
             <span class="text-center" id="sent-No">Sentence # : </span>
             <span class="text-center" id="sentance">here I am</span>
             <span class="text-center" id="token-No">Token # : </span>
@@ -73,7 +74,18 @@
                 </div>
             </div>
         </div>
-        <p class="linkerror-msg" id="linkerror-msg">Please wait....</p>
+        <p class="linkerror-msg" style="display: none;" id="linkerror-msg">Please wait....</p>
+        <div id="startpoint" >
+            <span class="text-center">Annotator ID</span>
+            <div class="input-container">
+                <input type="text" id="annotatorID" maxlength="10" />
+            </div>
+            <div id="startAnnotation" >
+                <div class="btn-group">
+                    <button onclick="startAnnotation()"> START ANNOTATION</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="scripts.js"></script>
