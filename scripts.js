@@ -58,6 +58,7 @@ var data = {}
 annotator = ""
 
 async function loadData() {
+    document.getElementById("submit").style.display = "none";
     document.getElementById("annotatorSpan").innerHTML = "Annotator ID: " + annotator;
     
     var allData = {};
@@ -231,7 +232,11 @@ function submit() {
     data["config"]["CurSentance"] = sentNo
     data["config"]["CurToken"] = tokenNo
     firebase.database().ref().child("Config").child(annotator).update(data["config"])
-    loadData();
 
-    // location.reload();
+    content = document.getElementById("content");
+    linkerrorMsg = document.getElementById("linkerror-msg");
+    linkerrorMsg.style.display = "block";
+    content.style.display = "none";
+
+    loadData();
 }
