@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<header>
+    <title>Code-Switching Data Annotator APP</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-database.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</header>
+
+<body>
+    <div class="box">
+        <div class="content" id="content">
+            <div id="mainfunctions" style="display: none;">
+                <div class="btn-group">
+                    <button onclick="monitor()">MONITOR ANNOTATORS</button>
+                </div>
+                <div class="btn-group">
+                    <button onclick="downloadJSON()">DOWNLOAD AS JSON</button>
+                </div>
+                <div class="btn-group">
+                    <button onclick="showHelp()">UPLOAD DATA AND CONNECT TO THE DATA BASE</button>
+                </div>
+            </div>
+            <div id="help" style="display: none;">
+                <span >1- Create a new application on Firebase and choose to connect to web application.</span>   
+                <br>     
+                <br>     
+                <span >2- upload the data after formating it into 
+                        <br>
+                    {Tokens:<br>
+                        {SentNo1:<br>
+                            {TokenNo1:<br>
+                                {"ID": #,"SentID": #,"Token": #}<br>
+                                ,..}<br>
+                                ,..}<br>
+                     from firebase GUI.</span>        
+                <br>
+                <br>     
+                <span >3- Download the application connection configuration and put its content in the "config.json" file in the code files.</span>        
+                <div class="btn-group">
+                        <button onclick="backMonitor()">BACK</button>
+                </div>
+            </div>
+            <div id="monitor" style="display: none;">
+                <table id="AnnotatorTable" >
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Start Sentence</th>
+                            <th>Start Token</th>
+                            <th>Current Sentence</th>
+                            <th>Current Token</th>
+                            <th>Done Tokens</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="data"></tbody>
+                </table>
+                <div class="btn-group">
+                    <button onclick="newAnnotator()">NEW ANNOTATOR</button>
+                </div>
+                <div class="btn-group">
+                        <button onclick="backMonitor()">BACK</button>
+                </div>
+            </div>
+            <div id="newAnnotator" style="display: none;">
+                <span class="text-center" style="padding: 0px; margin-bottom: 2px" id="annotatorSpan">ID</span>
+                <div class="input-container" style="padding-top: 0px;">
+                        <input type="text" style="padding-top: 0px;" id="ID" maxlength="10" />
+                </div>
+                <span class="text-center" style="padding-top: 10px; margin-bottom: 2px" id="annotatorSpan">Start Sentance</span>
+                <div class="input-container" style="padding-top: 0px;">
+                        <input type="number" style="padding-top: 0px;" id="startsent" maxlength="10"  value = "1"/>
+                </div>
+                <div class="btn-group">
+                    <button onclick="createNewAnnotator()">NEW ANNOTATOR</button>
+                </div>
+                <div class="btn-group">
+                    <button onclick="backNewAnnotator()">BACK</button>
+                </div>
+            </div>
+        </div>
+        <p class="linkerror-msg" style="display: none;" id="linkerror-msg">Please wait....</p>
+        <div id="startpoint" >
+            <span class="text-center">Password</span>
+            <div class="input-container">
+                <input type="password" id="password" maxlength="10" />
+            </div>
+            <div id="admin" >
+                <div class="btn-group">
+                    <button onclick="admin()">ENTER</button>
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button onclick="index()">MAIN PAGE</button>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+
+</body>
+
+</html>

@@ -1,14 +1,6 @@
-document.getElementById("prev").innerHTML = "<<";
-var firebaseConfig = {
-    apiKey: "AIzaSyAiK_KRw568VgJ9J3jxrk1ojxcOi2M-28A",
-    authDomain: "data-annotator-d31b7.firebaseapp.com",
-    databaseURL: "https://data-annotator-d31b7-default-rtdb.firebaseio.com",
-    projectId: "data-annotator-d31b7",
-    storageBucket: "data-annotator-d31b7.appspot.com",
-    messagingSenderId: "870056724106",
-    appId: "1:870056724106:web:ad167446ae97711ee40f73"
-};
-
+function admin() {
+    window.location.href = "admin.html";
+}
 
 firebase.initializeApp(firebaseConfig);
 
@@ -66,7 +58,6 @@ async function loadData() {
         allData["config"] = data;
     })
     if(allData["config"] === null){
-        console.log("Dddd");
         postConfig(annotator)
         await getConfig(annotator).then(data => {
             allData["config"] = data;
@@ -75,7 +66,6 @@ async function loadData() {
     await getSentance(allData["config"]["CurSentance"]).then(data => {
         allData["data"] = data;
     })
-    console.log(allData);
     sentNo = allData["config"]["CurSentance"]
     tokenNo = allData["config"]["CurToken"]
 
@@ -107,15 +97,23 @@ async function loadData() {
 };
 
 
-function startAnnotation(){
+async function startAnnotation(){
     annotator = document.getElementById("annotatorID").value
     if(annotator === "")
         alert("The ID should not be Empty!");
     else{
         annotator = annotator.toString().toUpperCase();
-        document.getElementById("startpoint").style.display = "none";
-        document.getElementById("linkerror-msg").style.display = "block";
-        loadData();
+        var allData = {};
+        await getConfig(annotator).then(data => {
+            allData["config"] = data;
+        })
+        if(allData["config"] === null){
+            alert("This ID is not exist!");
+        }else{
+            document.getElementById("startpoint").style.display = "none";
+            document.getElementById("linkerror-msg").style.display = "block";
+            loadData();
+        }
     }
 }
 
@@ -216,8 +214,8 @@ function showSegment() {
 }
 function submit() {
   
-    mixedTag = document.getElementById("tag").innerHTML
-    segm = document.getElementById("segment").innerHTML
+    mixedTag = document.getElementById("tag").innerHTML.replace('Tag: ','')
+    segm = document.getElementById("segment").innerHTML.replace('Segment: ','')
     
     Annotation = {}
     Annotation[annotator] = {

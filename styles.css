@@ -83,7 +83,22 @@ p {
     text-align: center;
     float: left;
 }
-
+button{
+    text-align: center;
+    background-color: #04AA6D;
+    /* Green background */
+    border: 1px solid green;
+    /* Green border */
+    color: white;
+    /* White text */
+    padding: 5px 24px;
+    margin: 5px;
+    /* Some padding */
+    cursor: pointer;
+    /* Pointer/hand icon */
+    float: left;
+    /* Float the buttons side by side */
+}
 .input-container button {
     width: 30%;
     text-align: center;
@@ -424,3 +439,18 @@ img {
 .btn-group button:hover {
     background-color: #3e8e41;
 }
+
+table {  
+    font-family:sans-serif;
+}
+th, td {
+    padding:.25em .5em;
+    text-align:left;
+  }
+  td {
+    background-color:#eee;    
+  }
+  th {
+    background-color:#04AA6D;
+    color:#fff;
+  }  
