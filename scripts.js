@@ -1,3 +1,4 @@
+document.getElementById("prev").innerHTML = "<<";
 function admin() {
     window.location.href = "admin.html";
 }
