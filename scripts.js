@@ -30,7 +30,9 @@ async function postConfig(ID) {
   return firebase.database().ref().update(updates)
 }
 
+
 async function getSentence(sentNo) {
+
     return new Promise((resolve, reject) => {
         dbRef.child("Tokens").child(sentNo.toString()).get()
             .then((snapshot) => {
