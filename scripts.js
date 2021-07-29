@@ -93,6 +93,7 @@ async function loadData() {
     content = document.getElementById("content");
     linkerrorMsg = document.getElementById("linkerror-msg");
     document.getElementById("tag-mixed").style.display = "none";
+    document.getElementById("segmentinput").style.display = "none";
     document.getElementById("not-mixed").style.display = "block";
     linkerrorMsg.style.display = "none";
     content.style.display = "block";
