@@ -54,7 +54,7 @@ async function getData() {
     })
 }
 
-async function getSentance(sentNo) {
+async function getSentence(sentNo) {
     return new Promise((resolve, reject) => {
         dbRef.child("Tokens").child(sentNo.toString()).get()
             .then((snapshot) => {
@@ -80,7 +80,7 @@ function loadTableData(items) {
       row.insertCell(0).innerHTML = key;
       row.insertCell(1).innerHTML = items[key].StartSent;
       row.insertCell(2).innerHTML = items[key].StartToken;
-      row.insertCell(3).innerHTML = items[key].CurSentance;
+      row.insertCell(3).innerHTML = items[key].CurSentence;
       row.insertCell(4).innerHTML = items[key].CurToken;
       row.insertCell(5).innerHTML = items[key].CurToken - items[key].StartToken;
       var btn = document.createElement("button");
@@ -130,7 +130,7 @@ async function createNewAnnotator(){
     ID = document.getElementById("ID").value
     StartSent = document.getElementById("startsent").value
     if(ID === "" || StartSent === ""){
-        alert("Make sure that you entered ID and Start Sentance values!");
+        alert("Make sure that you entered ID and Start Sentence values!");
     }else{
         annotator = ID.toString().toUpperCase();
         var allData = {};
@@ -138,12 +138,12 @@ async function createNewAnnotator(){
             allData["config"] = data;
         })
         if(allData["config"] === null){
-            await getSentance(StartSent).then(data => {
+            await getSentence(StartSent).then(data => {
                 allData["data"] = data;
             })
             var updates = {};
             updates['/Config/' + annotator] = {
-                "CurSentance":parseInt(StartSent),
+                "CurSentence":parseInt(StartSent),
                 "CurToken":parseInt(Object.keys(allData["data"])[0]),
                 "StartSent":parseInt(StartSent),
                 "StartToken":parseInt(Object.keys(allData["data"])[0])

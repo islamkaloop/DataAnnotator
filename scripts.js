@@ -24,13 +24,13 @@ async function getConfig(ID) {
 async function postConfig(ID) {
     var updates = {};
     updates['/Config/' + ID] = {
-        "CurSentance":1,
+        "CurSentence":1,
         "CurToken":1,
     };
   return firebase.database().ref().update(updates)
 }
 
-async function getSentance(sentNo) {
+async function getSentence(sentNo) {
     return new Promise((resolve, reject) => {
         dbRef.child("Tokens").child(sentNo.toString()).get()
             .then((snapshot) => {
@@ -64,10 +64,10 @@ async function loadData() {
             allData["config"] = data;
         })
     }
-    await getSentance(allData["config"]["CurSentance"]).then(data => {
+    await getSentence(allData["config"]["CurSentence"]).then(data => {
         allData["data"] = data;
     })
-    sentNo = allData["config"]["CurSentance"]
+    sentNo = allData["config"]["CurSentence"]
     tokenNo = allData["config"]["CurToken"]
 
     document.getElementById("sent-No").innerHTML = "Sentence #: " + sentNo;
@@ -75,19 +75,19 @@ async function loadData() {
 
     document.getElementById("tag").innerHTML = "Tag: Not Yet!";
     document.getElementById("segment").innerHTML = "Segment: Not Yet!";
-    var Sentance = "";
+    var Sentence = "";
     for (let token in allData["data"]) {
         if (allData["data"][token]["ID"] == tokenNo) {
             var tokensent = allData["data"][token]["Token"];
-            Sentance += "<em style='color: red;'> <[ " + tokensent + " ]> </em>";
+            Sentence += "<em style='color: red;'> <[ " + tokensent + " ]> </em>";
             document.getElementById("token").innerHTML = "Token: " +tokensent;
             Token = tokensent;
             refreshToken = tokensent;
         } else {
-            Sentance += allData["data"][token]["Token"] + " ";
+            Sentence += allData["data"][token]["Token"] + " ";
         }
     }
-    document.getElementById("sentance").innerHTML = "Sentance: " +Sentance;
+    document.getElementById("Sentence").innerHTML = "Sentence: " +Sentence;
 
 
     content = document.getElementById("content");
@@ -231,7 +231,7 @@ function submit() {
 
     tokenNo += 1
     if (typeof data["data"][tokenNo] === 'undefined') sentNo += 1
-    data["config"]["CurSentance"] = sentNo
+    data["config"]["CurSentence"] = sentNo
     data["config"]["CurToken"] = tokenNo
     firebase.database().ref().child("Config").child(annotator).update(data["config"])
 
